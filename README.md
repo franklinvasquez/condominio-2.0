@@ -1,2 +1,4 @@
 # condominio-2.0
-# codominio-3.0
+Sistema para la administracion de condominios
+
+
