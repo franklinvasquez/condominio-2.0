@@ -30,8 +30,11 @@ public class Notificacion {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar fechaEvento;
 	
-	@Column(name="informacion", length=225, nullable = false)
+	@Column(name="informacion", columnDefinition = "TEXT", nullable = false)
 	private String informacion;
+	
+	@Column(name="titulo", length=45, nullable = false)
+	private String titulo;
 	
 	@Column(name="tipo_evento",length=1)
 	private char tipo;
@@ -88,6 +91,18 @@ public class Notificacion {
 
 	public void setVivienda(Vivienda vivienda) {
 		this.vivienda = vivienda;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+	public String resumenInf() {
+		if(informacion.length()<40)return informacion;
+		return informacion.substring(0, 40);
 	}
 		
 }
