@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <!-- Mirrored from webapplayers.com/homer_admin-v2.0/light-shadow/text_editor.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 29 Aug 2017 17:58:16 GMT -->
 <head>
@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <!-- Page title -->
-<title>HOMER | WebApp admin theme</title>
+<title>SAC | Notificaciones</title>
 
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
@@ -20,9 +20,14 @@
 <link rel="stylesheet" th:href="@{/vendor/animate.css/animate.css}" />
 <link rel="stylesheet"
 	th:href="@{/vendor/bootstrap/dist/css/bootstrap.css}" />
+<link rel="stylesheet"
+	th:href="@{/vendor/summernote/dist/summernote.css}" />
+<link rel="stylesheet"
+	th:href="@{/vendor/summernote/dist/summernote-bs3.css}" />
 <link rel="stylesheet" th:href="@{/vendor/select2-3.5.2/select2.css}" />
 <link rel="stylesheet"
 	th:href="@{/vendor/select2-bootstrap/select2-bootstrap.css}" />
+
 <link rel="stylesheet" th:href="@{/vendor/toastr/toastr.min.css}" />
 
 <!-- App styles -->
@@ -33,7 +38,7 @@
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <style type="text/css">
 #notes {
-	 max-height: 500px;
+	max-height: 500px;
 	overflow: auto;
 }
 </style>
@@ -95,8 +100,7 @@
 				<div class="col-md-3">
 					<div class="hpanel panel-group">
 						<div class="panel-body">
-							<div class="text-center text-muted font-bold">Search note
-								or add new</div>
+							<div class="text-center text-muted font-bold">Buscar o Agregar</div>
 
 						</div>
 						<div class="panel-section">
@@ -104,7 +108,7 @@
 							<div class="input-group">
 								<input type="text" class="form-control"
 									placeholder="Buscar nota..." /> <span class="input-group-btn">
-									<button id="btn-agregar" class="btn btn-default" type="button">
+									<button sec:authorize="hasAuthority('admin')" id="btn-agregar" class="btn btn-default" type="button">
 										<i class="glyphicon glyphicon-plus small"></i>
 									</button>
 								</span>
@@ -116,41 +120,69 @@
 						</div>
 
 						<div id="notes" class="collapse">
-						<div class="panel-body note-link" th:each="notificacion,iter : ${notificaciones}">
-						  <a th:href="|#note${iter.index}|" data-toggle="tab"> <small
-									class="pull-right text-muted">26.10.2016</small>
+							<div class="panel-body note-link"
+								th:each="notificacion,iter : ${notificaciones}">
+								<a class="item-nota" th:href="|#note${iter.index}|"
+									data-toggle="tab"> <small th:text="${#dates.format(notificacion.fecha, 'dd-MM-yyyy')}" class="pull-right text-muted">26.10.2016</small>
 									<h5 th:text="${notificacion.titulo}">Titulo no definido</h5>
-									<div class="small" th:text="${notificacion.resumenInf()}"></div>
+									<div class="small" th:text="|Vivienda : ${notificacion.nombreVivienda}|"></div>
 								</a>
+							</div>
+
 						</div>
-						
-						</div>
-
-
-
 					</div>
 				</div>
 				<div class="col-md-9">
 					<div class="hpanel">
 
-						<div  class="panel-body">
+						<div class="panel-body">
 
 							<div class="text-center hidden">We couldn't find any notes
 								for you.</div>
 
 							<div class="tab-content">
-								<div th:each="notificacion,iter : ${notificaciones}" th:id="|note${iter.index}|" class="tab-pane">
+							
+							
+							<div sec:authorize="hasAuthority('admin')"  id="note-edit" class="tab-pane">
+                            <div class="pull-right text-muted m-l-lg">
+                                12.04.2015
+                            </div>
+                            <h3>Titulo </h3>
+                            <hr/>
+                            <div class="note-content">
+                                <div id="editor-default" class="summernote"></div>
+                            </div>
+                            <div class="btn-group">
+                                <button data-event="#editor-default" class="editor-save btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+                                <button data-event="#editor-default" class="editor-deleter btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
+                            </div>
+                        </div>
+							
+								<div th:each="notificacion,iter : ${notificaciones}"
+									th:id="|note${iter.index}|" class="tab-pane">
 									<div class="pull-right text-muted m-l-lg">26.10.2016</div>
-									<h3 max="50" th:contenteditable="true" th:text="${notificacion.titulo}">Titulo no definido</h3>
+									<h3 max="50" th:contenteditable="true"
+										th:text="${notificacion.titulo}">Titulo no definido</h3>
 									<hr />
 									<div class="note-content">
-										<textarea th:text="${notificacion.informacion}" class="form-control"></textarea>
+										<textarea th:text="${notificacion.mensaje}"
+											th:id="|editor-${iter.index}|" class="summernote"></textarea>
+									   <div sec:authorize="hasAuthority('admin')">
+									   <h5 class="m-t-md">Destinatarios</h5>
+										<select class="js-source-states-2" multiple="multiple"
+											style="width: 100%">
+											<option th:each="vivienda : ${viviendas}" th:value="${vivienda.id}" th:text="${vivienda.numero}"></option>
+										</select>
+									   </div>										
 									</div>
+									<hr/>
 									<div class="btn-group">
-										<button class="btn btn-sm btn-default">
+										<button th:attr="data-event=|#editor-${iter.index}|"
+											class="btn btn-sm btn-default editor-save">
 											<i class="fa fa-thumbs-o-up"></i> Guardar
 										</button>
-										<button class="btn btn-sm btn-default">
+										<button class="btn btn-sm btn-default editor-deleter"
+											th:attr="data-event=|#editor-${iter.index}|">
 											<i class="fa fa-trash"></i> Eliminar
 										</button>
 									</div>
@@ -303,6 +335,7 @@
 	<script th:src="@{/vendor/metisMenu/dist/metisMenu.min.js}"></script>
 	<script th:src="@{/vendor/iCheck/icheck.min.js}"></script>
 	<script th:src="@{/vendor/sparkline/index.js}"></script>
+	<script th:src="@{/vendor/summernote/dist/summernote.min.js}"></script>
 	<script th:src="@{/vendor/select2-3.5.2/select2.min.js}"></script>
 	<script th:src="@{/vendor/toastr/toastr.min.js}"></script>
 
@@ -311,13 +344,23 @@
 	<script th:inline="javascript">
 		$(function() {
 
-			 $('#notes').slimScroll({
-				 height: '500px'
-			 });
-			 
-			 $('#btn-agregar').on('click',function(){
-				 
-			 });
+			$('#notes').slimScroll({
+				height : '500px'
+			});
+			
+			$('.summernote').summernote();
+			$(".js-source-states-2").select2();
+
+			$('.editor-save').on('click', function() {
+				var id = $(this).attr('data-event');
+				alert($(id).summernote('code'));
+			});
+			$('.item-nota').on('click', function() {
+				var id = $(this).attr('href');
+			});
+			$('#btn-agregar').on('click',function(){
+				$('#note-edit').addClass('active');
+			});
 			function ajax(url, method, data, dataType) {
 				var jqxhr = $.ajax({
 					method : method,
@@ -329,9 +372,6 @@
 			}
 		});
 	</script>
-
-
-
 </body>
 
 <!-- Mirrored from webapplayers.com/homer_admin-v2.0/light-shadow/text_editor.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 29 Aug 2017 17:58:16 GMT -->

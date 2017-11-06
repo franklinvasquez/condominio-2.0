@@ -4,11 +4,8 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,9 +36,7 @@ public class Notificacion {
 	@Column(name="tipo_evento",length=1)
 	private char tipo;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_vivienda", nullable=false)
-	private Vivienda vivienda;
+
 	
 	public Notificacion() {}
 
@@ -84,15 +79,6 @@ public class Notificacion {
 	public void setTipo(char tipo) {
 		this.tipo = tipo;
 	}
-
-	public Vivienda getVivienda() {
-		return vivienda;
-	}
-
-	public void setVivienda(Vivienda vivienda) {
-		this.vivienda = vivienda;
-	}
-
 	public String getTitulo() {
 		return titulo;
 	}
@@ -104,5 +90,28 @@ public class Notificacion {
 		if(informacion.length()<40)return informacion;
 		return informacion.substring(0, 40);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Notificacion other = (Notificacion) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
 		
 }

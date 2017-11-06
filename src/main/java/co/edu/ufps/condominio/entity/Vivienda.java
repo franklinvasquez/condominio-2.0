@@ -29,9 +29,6 @@ public class Vivienda {
 	@Column(name="habitada", columnDefinition="tinyint(1) default 0")
 	private boolean habitada;
 	
-	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="vivienda")
-	private List<Notificacion> notificaciones;
-	
 	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL, mappedBy="vivienda")
 	private List<Reclamo> reclamos;
 	
@@ -73,15 +70,6 @@ public class Vivienda {
 	public void setHabitada(boolean habitada) {
 		this.habitada = habitada;
 	}
-
-	public List<Notificacion> getNotificaciones() {
-		return notificaciones;
-	}
-
-	public void setNotificaciones(List<Notificacion> notificaciones) {
-		this.notificaciones = notificaciones;
-	}
-
 	public List<Reclamo> getReclamos() {
 		return reclamos;
 	}

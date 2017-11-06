@@ -68,6 +68,5 @@ public class RepresentanteController {
 	public @ResponseBody Respuesta<String>desactivar(@RequestParam(name="id") int id){
 		return representanteServicio.desactivar(id);
 	}
-	
-	
+		
 }

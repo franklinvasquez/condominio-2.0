@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <meta charset="utf-8"/>
 <title>menu</title>
@@ -44,7 +44,7 @@
                 <a href="#" th:href="@{/perfil}"> <span class="nav-label">Perfil</span> <span class="label label-success pull-right">v.1</span> </a>
             </li>
             <li>
-                <a href="#" th:href="@{/representante/cuentas}"> <span class="nav-label">Cuentas</span><span class="label label-warning pull-right">NEW</span> </a>
+                <a href="#" th:href="@{/representante/cuentas}" sec:authorize="hasAuthority('admin')" > <span class="nav-label">Cuentas</span><span class="label label-warning pull-right">NEW</span> </a>
             </li>  
             <li>
                 <a href="#"><span class="nav-label">Vivienda</span><span class="fa arrow"></span> </a>
@@ -62,18 +62,7 @@
                     <li><a href="#">Quejas</a></li>
                 </ul>
             </li>
-            <li>
-                <a href="options.html"> <span class="nav-label">Layout options</span></a>
-            </li>
-            <li>
-                <a href="grid_system.html"> <span class="nav-label">Grid system</span></a>
-            </li>
-            <li>
-                <a href="landing_page.html"> <span class="nav-label">Landing page</span></a>
-            </li>
-            <li>
-                <a href="package.html"> <span class="nav-label">Package</span></a>
-            </li>
+           
 
         </ul>
     </div>
