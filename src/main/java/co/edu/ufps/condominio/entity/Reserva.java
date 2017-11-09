@@ -33,6 +33,10 @@ public class Reserva {
 	@JoinColumn(name="id_instalacion",nullable=false)
 	private Instalacion instalacion;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_vivienda")
+	private Vivienda vivienda;
+	
 	public Reserva() {}
 
 	public int getId() {

@@ -35,6 +35,9 @@ public class Vivienda {
 	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL,mappedBy="vivienda")
 	private List<Sancion> sanciones;
 	
+	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL,mappedBy="vivienda")
+	private List<Reserva> reservas;
+	
 	public Vivienda() {
 		
 	}

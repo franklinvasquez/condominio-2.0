@@ -152,8 +152,14 @@
                             <div class="note-content">
                                 <div id="editor-default" class="summernote"></div>
                             </div>
+                            <h5 class="m-t-md">Destinatarios</h5>
+										<select id="editor-select" class="js-source-states-2" multiple="multiple"
+											style="width: 100%">
+											<option th:each="vivienda : ${viviendas}" th:value="${vivienda.id}" th:text="${vivienda.numero}"></option>
+										</select>
+										<hr/>
                             <div class="btn-group">
-                                <button data-event="#editor-default" class="editor-save btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+                                <button data-select="#editor-select" data-event="#editor-default" class="editor-save btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
                                 <button data-event="#editor-default" class="editor-deleter btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
                             </div>
                         </div>
@@ -351,13 +357,21 @@
 			$('.summernote').summernote();
 			$(".js-source-states-2").select2();
 
+			//evento para actualizar una nota
 			$('.editor-save').on('click', function() {
 				var id = $(this).attr('data-event');
-				alert($(id).summernote('code'));
+				var idSelect =$(this).attr('data-select');
+				if(id='editor-default'){
+					$(id).summernote('code');
+					console.log($(idSelect).select2("val"));
+				}
+				//alert($(id).summernote('code'));
 			});
+			//evento para seleccionar una nota
 			$('.item-nota').on('click', function() {
 				var id = $(this).attr('href');
 			});
+			//evento para desplegar formulario de registro de notificacion
 			$('#btn-agregar').on('click',function(){
 				$('#note-edit').addClass('active');
 			});

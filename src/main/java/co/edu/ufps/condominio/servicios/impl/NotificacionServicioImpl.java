@@ -1,6 +1,7 @@
 package co.edu.ufps.condominio.servicios.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +19,9 @@ import co.edu.ufps.condominio.entity.Vivienda;
 import co.edu.ufps.condominio.modelo.FormNotificaciones;
 import co.edu.ufps.condominio.modelo.NotaNotificacion;
 import co.edu.ufps.condominio.repository.DestinatarioNotificacionRepository;
+import co.edu.ufps.condominio.repository.NotificacionRepository;
 import co.edu.ufps.condominio.repository.RepresentanteRepository;
+import co.edu.ufps.condominio.repository.ViviendaRepository;
 import co.edu.ufps.condominio.servicios.NotificacionServicio;
 import co.edu.ufps.condominio.util.Respuesta;
 @Service("NotificacionServicioImpl")
@@ -29,15 +32,45 @@ public class NotificacionServicioImpl implements NotificacionServicio {
 	@Qualifier("DestinatarioNotificacionRepository")
 	private DestinatarioNotificacionRepository destinatarioNotiRepository;
 	
+	@Autowired
+	@Qualifier("ViviendaRepository")
+	ViviendaRepository viviendaRepository;
 	
 	@Autowired
 	@Qualifier("RepresentanteRepository")
 	private RepresentanteRepository representanteRepository;
 	
+	@Autowired
+	@Qualifier("NotificacionRepository")
+	private NotificacionRepository notificacionRepository;
+	
 
 
 	@Override
-	public Respuesta<String> registrar(FormNotificaciones form) {	
+	public Respuesta<String> registrar(FormNotificaciones form) {
+	   // destinatarioNotiRepository
+		Notificacion notificacionEntity= new Notificacion();
+		notificacionEntity.setFechaPublicacion(Calendar.getInstance());
+		notificacionEntity.setFechaEvento(form.getFechaEvento());
+		notificacionEntity.setTitulo(form.getTitulo());
+		notificacionEntity.setInformacion(form.getCuerpo());
+		notificacionEntity.setTipo('N');
+		notificacionEntity=notificacionRepository.save(notificacionEntity);
+		if(notificacionEntity!=null) {
+			List<Vivienda>viviendas=viviendaRepository.findByIdIn(form.getViviendas());
+			List<DestinatarioNotificacion> listadoDestinatario= new ArrayList<>(viviendas.size());
+			for(Vivienda vivienda:viviendas) {
+				DestinatarioNotificacion destinatarioEntity = new DestinatarioNotificacion();
+				destinatarioEntity.setLectura(false);
+				//llave primaria
+				DestinatarioNotificacionPK destinatarioKey = new DestinatarioNotificacionPK();
+				destinatarioKey.setVivienda(vivienda);
+				destinatarioKey.setNotificacion(notificacionEntity);			
+				destinatarioEntity.setId(destinatarioKey);
+				listadoDestinatario.add(destinatarioEntity);			
+			}
+		 destinatarioNotiRepository.save(listadoDestinatario);
+		}
 		return null;
 	}
 
@@ -53,7 +86,6 @@ public class NotificacionServicioImpl implements NotificacionServicio {
 	public List<NotaNotificacion> listar(Persona persona) {
 		Set<Vivienda> viviendas=representanteRepository.findQueryVivienda(persona);	
 		List<DestinatarioNotificacion>listado=destinatarioNotiRepository.findQuery(viviendas);
-		log.info("tamaño : "+listado.size());
 		List<NotaNotificacion> listadoNotas = new ArrayList<>();
 		for(DestinatarioNotificacion destinatario:listado) {
 			DestinatarioNotificacionPK pk = destinatario.getId();

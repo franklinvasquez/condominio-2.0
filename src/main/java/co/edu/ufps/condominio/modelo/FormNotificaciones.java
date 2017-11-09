@@ -2,7 +2,7 @@ package co.edu.ufps.condominio.modelo;
 
 
 import java.util.Calendar;
-import java.util.Map;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +15,7 @@ public class FormNotificaciones {
 	public String getTitulo() {
 		return titulo;
 	}
-	private Map<Integer, String> viviendas;
+	public Set<Integer> viviendas;
 	
 	public FormNotificaciones() {
 		
@@ -43,6 +43,12 @@ public class FormNotificaciones {
 	public void setFechaEvento(Calendar fechaEvento) {
 		this.fechaEvento = fechaEvento;
 	}
+	public Set<Integer> getViviendas() {
+		return viviendas;
+	}
 
+	public void setViviendas(Set<Integer> viviendas) {
+		this.viviendas = viviendas;
+	}
 	
 }
