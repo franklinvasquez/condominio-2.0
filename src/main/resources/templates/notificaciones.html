@@ -172,10 +172,10 @@
 													<input type="checkbox"/> <label></label>
 												</div>
 											</td>
-											<td><a th:text="${notificacion.nombreVivienda}" href="#"></a></td>
-											<td><a th:text="${notificacion.titulo}" href="#"></a></td>
+											<td><a th:attr="data-id = ${notificacion.primaria}" class="visor-notas"  th:text="${notificacion.nombreVivienda}" href="#"></a></td>
+											<td><a class="visor-notas" th:text="${notificacion.titulo}" href="#"></a></td>
 
-											<td th:text="${#dates.format(notificacion.fecha, 'dd-MM-yyyy')}" class="text-right mail-date"></td>
+											<td th:text="${#dates.format(notificacion.fecha, 'dd-MM-yyyy')}" class="visor-notas text-right mail-date"></td>
 										</tr>
 
 									</tbody>
@@ -400,6 +400,10 @@
 		    		eventosEditor();
 				});
 		    	
+		    });
+		    
+		    $('.visor-notas').on('click',function(){
+		    	var 
 		    });
 		    function ajax(url, method, data, dataType) {
 				 var jqxhr = $.ajax({

@@ -3,6 +3,7 @@ package co.edu.ufps.condominio.modelo;
 import java.util.Calendar;
 
 public class NotaNotificacion {
+	private String primaria;
 	private String titulo;
 	private String mensaje;
 	private Calendar fecha;
@@ -15,6 +16,9 @@ public class NotaNotificacion {
 	
 	public boolean isEstado() {
 		return estado;
+	}
+	public String getNombrable() {
+		return primaria;
 	}
 
 	public void setEstado(boolean estado) {
@@ -51,6 +55,15 @@ public class NotaNotificacion {
 	public void setNombreVivienda(String nombreVivienda) {
 		this.nombreVivienda = nombreVivienda;
 	}
-	
+
+
+	public String getPrimaria() {
+		return primaria;
+	}
+
+
+	public void setPrimaria(String primaria) {
+		this.primaria = primaria;
+	}
 	
 }

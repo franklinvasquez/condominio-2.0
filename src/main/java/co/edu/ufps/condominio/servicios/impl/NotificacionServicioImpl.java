@@ -91,14 +91,19 @@ public class NotificacionServicioImpl implements NotificacionServicio {
 		List<DestinatarioNotificacion>listado=destinatarioNotiRepository.findQuery(viviendas);
 		List<NotaNotificacion> listadoNotas = new ArrayList<>();
 		for(DestinatarioNotificacion destinatario:listado) {
+			
 			DestinatarioNotificacionPK pk = destinatario.getId();
 			Notificacion notificacion= pk.getNotificacion();
 			NotaNotificacion nota = new NotaNotificacion();
+			log.info("-------------------------------------------");
+			log.info("notificacion_: "+notificacion.getId());
 			//
 			nota.setEstado(destinatario.isLectura());
 			nota.setFecha(notificacion.getFechaPublicacion());
 			nota.setTitulo(notificacion.getTitulo());
 			nota.setNombreVivienda(pk.getVivienda().getNumero());
+			
+			//nota.setPrimaria(""+notificac);
 			listadoNotas.add(nota);
 		}
 		return listadoNotas;
