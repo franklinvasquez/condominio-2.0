@@ -6,16 +6,23 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class FormNotificaciones {
 	@NotNull
 	private String titulo;
+	@NotNull
 	private String cuerpo;
 	@NotNull
+	@DateTimeFormat(pattern = "dd-mm-yyyy")
 	private Calendar fechaEvento;
+	
+	public Set<Integer> viviendas;
+	
 	public String getTitulo() {
 		return titulo;
 	}
-	public Set<Integer> viviendas;
+	
 	
 	public FormNotificaciones() {
 		

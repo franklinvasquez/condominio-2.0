@@ -48,7 +48,7 @@ public class NotificacionServicioImpl implements NotificacionServicio {
 
 	@Override
 	public Respuesta<String> registrar(FormNotificaciones form) {
-	   // destinatarioNotiRepository
+	   Respuesta<String> ret = new Respuesta<String>(false, "Error al registrar");
 		Notificacion notificacionEntity= new Notificacion();
 		notificacionEntity.setFechaPublicacion(Calendar.getInstance());
 		notificacionEntity.setFechaEvento(form.getFechaEvento());
@@ -69,9 +69,12 @@ public class NotificacionServicioImpl implements NotificacionServicio {
 				destinatarioEntity.setId(destinatarioKey);
 				listadoDestinatario.add(destinatarioEntity);			
 			}
-		 destinatarioNotiRepository.save(listadoDestinatario);
+		 if(destinatarioNotiRepository.save(listadoDestinatario)!=null) {
+			 ret.setEstado(true);
+			 ret.setValor("Registro exitoso");
+		 }
 		}
-		return null;
+		return ret;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <!-- Mirrored from webapplayers.com/homer_admin-v2.0/light-shadow/text_editor.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 29 Aug 2017 17:58:16 GMT -->
 <head>
@@ -27,6 +28,7 @@
 <link rel="stylesheet" th:href="@{/vendor/select2-3.5.2/select2.css}" />
 <link rel="stylesheet"
 	th:href="@{/vendor/select2-bootstrap/select2-bootstrap.css}" />
+ <link rel="stylesheet" th:href="@{/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css}" />
 
 <link rel="stylesheet" th:href="@{/vendor/toastr/toastr.min.css}" />
 
@@ -96,110 +98,103 @@
 			</div>
 		</div>
 		<div class="content">
+
 			<div class="row">
 				<div class="col-md-3">
-					<div class="hpanel panel-group">
+					<div class="hpanel">
 						<div class="panel-body">
-							<div class="text-center text-muted font-bold">Buscar o Agregar</div>
-
-						</div>
-						<div class="panel-section">
-
-							<div class="input-group">
-								<input type="text" class="form-control"
-									placeholder="Buscar nota..." /> <span class="input-group-btn">
-									<button sec:authorize="hasAuthority('admin')" id="btn-agregar" class="btn btn-default" type="button">
-										<i class="glyphicon glyphicon-plus small"></i>
-									</button>
-								</span>
-							</div>
-							<button type="button" data-toggle="collapse" data-target="#notes"
-								class="btn-sm visible-xs visible-sm collapsed btn-default btn btn-block m-t-sm">
-								All notes <i class="fa fa-angle-down"></i>
-							</button>
+							<a id="btn-agregar" href="#"
+								class="btn btn-success btn-block m-b-md">Crear</a>
+							<ul class="mailbox-list">
+								<li class="active"><a href="#"> <span
+										class="pull-right"> 12</span> <i class="fa fa-envelope"></i>
+										Entrada
+								</a></li>
+								<li sec:authorize="hasAuthority('admin')"><a href="#"><i
+										class="fa fa-paper-plane"></i>Salida</a></li>
+							</ul>
 						</div>
 
-						<div id="notes" class="collapse">
-							<div class="panel-body note-link"
-								th:each="notificacion,iter : ${notificaciones}">
-								<a class="item-nota" th:href="|#note${iter.index}|"
-									data-toggle="tab"> <small th:text="${#dates.format(notificacion.fecha, 'dd-MM-yyyy')}" class="pull-right text-muted">26.10.2016</small>
-									<h5 th:text="${notificacion.titulo}">Titulo no definido</h5>
-									<div class="small" th:text="|Vivienda : ${notificacion.nombreVivienda}|"></div>
-								</a>
-							</div>
-
-						</div>
 					</div>
 				</div>
-				<div class="col-md-9">
+				<div class="col-md-9" id="contenedor-notas">
+				<div th:fragment="listado-notas">
 					<div class="hpanel">
-
-						<div class="panel-body">
-
-							<div class="text-center hidden">We couldn't find any notes
-								for you.</div>
-
-							<div class="tab-content">
-							
-							
-							<div sec:authorize="hasAuthority('admin')"  id="note-edit" class="tab-pane">
-                            <div class="pull-right text-muted m-l-lg">
-                                12.04.2015
-                            </div>
-                            <h3>Titulo </h3>
-                            <hr/>
-                            <div class="note-content">
-                                <div id="editor-default" class="summernote"></div>
-                            </div>
-                            <h5 class="m-t-md">Destinatarios</h5>
-										<select id="editor-select" class="js-source-states-2" multiple="multiple"
-											style="width: 100%">
-											<option th:each="vivienda : ${viviendas}" th:value="${vivienda.id}" th:text="${vivienda.numero}"></option>
-										</select>
-										<hr/>
-                            <div class="btn-group">
-                                <button data-select="#editor-select" data-event="#editor-default" class="editor-save btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
-                                <button data-event="#editor-default" class="editor-deleter btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
-                            </div>
-                        </div>
-							
-								<div th:each="notificacion,iter : ${notificaciones}"
-									th:id="|note${iter.index}|" class="tab-pane">
-									<div class="pull-right text-muted m-l-lg">26.10.2016</div>
-									<h3 max="50" th:contenteditable="true"
-										th:text="${notificacion.titulo}">Titulo no definido</h3>
-									<hr />
-									<div class="note-content">
-										<textarea th:text="${notificacion.mensaje}"
-											th:id="|editor-${iter.index}|" class="summernote"></textarea>
-									   <div sec:authorize="hasAuthority('admin')">
-									   <h5 class="m-t-md">Destinatarios</h5>
-										<select class="js-source-states-2" multiple="multiple"
-											style="width: 100%">
-											<option th:each="vivienda : ${viviendas}" th:value="${vivienda.id}" th:text="${vivienda.numero}"></option>
-										</select>
-									   </div>										
-									</div>
-									<hr/>
-									<div class="btn-group">
-										<button th:attr="data-event=|#editor-${iter.index}|"
-											class="btn btn-sm btn-default editor-save">
-											<i class="fa fa-thumbs-o-up"></i> Guardar
+						<div class="panel-heading hbuilt">
+							<div class="text-center p-xs font-normal">
+								<div class="input-group">
+									<input type="text" class="form-control input-sm"
+										placeholder="Buscar notificacion" /> <span
+										class="input-group-btn">
+										<button type="button" class="btn btn-sm btn-default">Buscar
 										</button>
-										<button class="btn btn-sm btn-default editor-deleter"
-											th:attr="data-event=|#editor-${iter.index}|">
-											<i class="fa fa-trash"></i> Eliminar
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-6 m-b-md">
+									<div class="btn-group">
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-refresh"></i> Refrescar
+										</button>
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-eye"></i>
+										</button>
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-exclamation"></i>
+										</button>
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-trash-o"></i>
+										</button>
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-check"></i>
+										</button>
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-tag"></i>
+										</button>
+									</div>
+								</div>
+								<div class="col-md-6 mailbox-pagination m-b-md">
+									<div class="btn-group">
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-arrow-left"></i>
+										</button>
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-arrow-right"></i>
 										</button>
 									</div>
 								</div>
 							</div>
+							<div class="table-responsive">
+								<table class="table table-hover table-mailbox">
+									<tbody>
+										<tr class="unread">
+											<td class="">
+												<div class="checkbox checkbox-single checkbox-success">
+													<input type="checkbox" /> <label></label>
+												</div>
+											</td>
+											<td><a href="#">Jeremy Massey</a></td>
+											<td><a href="#">Lorem ipsum dolor sit amet,
+													consectetur adipiscing elit.</a></td>
 
+											<td class="text-right mail-date">Tue, Nov 25</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
 						</div>
-
+						<div class="panel-footer">
+							<i class="fa fa-eye"> </i> 6 unread
+						</div>
 					</div>
 				</div>
+				</div>
 			</div>
+
 		</div>
 
 		<!-- Right sidebar -->
@@ -343,47 +338,91 @@
 	<script th:src="@{/vendor/sparkline/index.js}"></script>
 	<script th:src="@{/vendor/summernote/dist/summernote.min.js}"></script>
 	<script th:src="@{/vendor/select2-3.5.2/select2.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js}"></script>
 	<script th:src="@{/vendor/toastr/toastr.min.js}"></script>
 
 	<!-- App scripts -->
 	<script th:src="@{/js/homer.js}"></script>
 	<script th:inline="javascript">
 		$(function() {
+			function eventosEditor() {
+				 $(".js-source-states-2").select2();
+				 $('.datepicker').datepicker();
+				 $('.summernote').summernote();
+				 
+				 $('#btn-regresar').on('click', function() {
+					 $('#contenedor-notas').load("/condominio/notificaciones/refresh-listado",function(){
+						 
+					 });
+				 });
+				 
+				 $('#btn-registrar').on('click',function(){
+					 var data = $('#form-editor').serializeArray();
+					 var data_viviendas=$('#select-viviendas').select2("val").map(Number);
+					 data.push({ name: "viviendas", value: data_viviendas });
+					 var data_cuerpo=$('#cuerpo').summernote('code');
+					 data.push({ name: "cuerpo", value: data_cuerpo });
+					 var jqxhr= ajax('/condominio/notificaciones/registrar','post',data,'json');
+					 jqxhr.done(function(ret_data) {
+							//evaluar exito
+							if (ret_data.estado) {
+								//ocultar errores form
+								hide_messages();
+								$("#registro-form")[0].reset();
+								//desplegar mensaje global
+								toastr.success(ret_data.valor);
+							} else {
+								//hide_messages();
+								show_messages(ret_data);
+								toastr.warning(ret_data.valor);
+							}
+						}).fail(function() {
+							toastr.error("error de conexion");
+						}).always(function() {
 
-			$('#notes').slimScroll({
-				height : '500px'
-			});
+						});
+				 });
+			 }
 			
-			$('.summernote').summernote();
-			$(".js-source-states-2").select2();
-
-			//evento para actualizar una nota
-			$('.editor-save').on('click', function() {
-				var id = $(this).attr('data-event');
-				var idSelect =$(this).attr('data-select');
-				if(id='editor-default'){
-					$(id).summernote('code');
-					console.log($(idSelect).select2("val"));
-				}
-				//alert($(id).summernote('code'));
-			});
-			//evento para seleccionar una nota
-			$('.item-nota').on('click', function() {
-				var id = $(this).attr('href');
-			});
-			//evento para desplegar formulario de registro de notificacion
-			$('#btn-agregar').on('click',function(){
-				$('#note-edit').addClass('active');
-			});
-			function ajax(url, method, data, dataType) {
-				var jqxhr = $.ajax({
-					method : method,
-					url : url,
-					data : data,
-					dataType : dataType
+		    $('#btn-agregar').on('click',function() {
+		    	$('#contenedor-notas').load("/condominio/notificaciones/refresh-editor",function(){
+		    		eventosEditor();
 				});
-				return jqxhr;
-			}
+		    	
+		    });
+		    function ajax(url, method, data, dataType) {
+				 var jqxhr = $.ajax({
+				 method : method,
+				 url : url,
+				 data : data,
+				 dataType : dataType
+				 });
+				 return jqxhr;
+				 }
+		    
+		   
+			/*
+			 //evento para actualizar una nota
+			 $('.editor-save').on('click', function() {
+			 var id = $(this).attr('data-event');
+			 var idSelect =$(this).attr('data-select');
+			 if(id='editor-default'){
+			 var fechaEvento
+			 var mensaje=$(id).summernote('code');
+			 var viviendas=$(idSelect).select2("val").map(Number);
+			 }
+			 //alert($(id).summernote('code'));
+			 });
+			 //evento para seleccionar una nota
+			 $('.item-nota').on('click', function() {
+			 var id = $(this).attr('href');
+			 });
+			 //evento para desplegar formulario de registro de notificacion
+			 $('#btn-agregar').on('click',function(){
+			 $('#note-edit').addClass('active');
+			 });
+			 ¨
+			 */
 		});
 	</script>
 </body>
