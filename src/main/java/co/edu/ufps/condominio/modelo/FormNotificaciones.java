@@ -5,11 +5,13 @@ import java.util.Calendar;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class FormNotificaciones {
-	@NotNull
+
+    @Size(min=3,max=45)
 	private String titulo;
 	@NotNull
 	private String cuerpo;

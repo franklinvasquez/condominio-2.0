@@ -97,8 +97,6 @@ public class NotificacionServicioImpl implements NotificacionServicio {
 			//
 			nota.setEstado(destinatario.isLectura());
 			nota.setFecha(notificacion.getFechaPublicacion());
-			
-			nota.setMensaje(notificacion.getInformacion());
 			nota.setTitulo(notificacion.getTitulo());
 			nota.setNombreVivienda(pk.getVivienda().getNumero());
 			listadoNotas.add(nota);

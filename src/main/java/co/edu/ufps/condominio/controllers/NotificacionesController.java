@@ -48,7 +48,6 @@ public class NotificacionesController {
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	    String name = user.getUsername();
 		model.addAttribute("notificaciones", notificacionServicio.listar(personaServicio.buscar(name)));
-		model.addAttribute("viviendas", viviendaServicio.listadoByEstado(true));
 		return VIEW_PRINCIPA;
 	}
 	

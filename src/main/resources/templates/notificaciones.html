@@ -29,20 +29,16 @@
 <link rel="stylesheet"
 	th:href="@{/vendor/select2-bootstrap/select2-bootstrap.css}" />
  <link rel="stylesheet" th:href="@{/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css}" />
+  <link rel="stylesheet" th:href="@{/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css}" />
 
 <link rel="stylesheet" th:href="@{/vendor/toastr/toastr.min.css}" />
 
 <!-- App styles -->
-<link rel="stylesheet"
-	th:href="@{/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css}" />
-<link rel="stylesheet"
-	th:href="@{/fonts/pe-icon-7-stroke/css/helper.css}" />
-<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" th:href="@{/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css}" />
+<link rel="stylesheet" th:href="@{/fonts/pe-icon-7-stroke/css/helper.css}" />
+    <link rel="stylesheet" th:href="@{/styles/static_custom.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 <style type="text/css">
-#notes {
-	max-height: 500px;
-	overflow: auto;
-}
 </style>
 </head>
 <body class="light-skin fixed-navbar sidebar-scroll">
@@ -170,17 +166,16 @@
 							<div class="table-responsive">
 								<table class="table table-hover table-mailbox">
 									<tbody>
-										<tr class="unread">
+										<tr th:each="notificacion : ${notificaciones}" th:class="${notificacion.estado}? read : unread">
 											<td class="">
 												<div class="checkbox checkbox-single checkbox-success">
-													<input type="checkbox" /> <label></label>
+													<input type="checkbox"/> <label></label>
 												</div>
 											</td>
-											<td><a href="#">Jeremy Massey</a></td>
-											<td><a href="#">Lorem ipsum dolor sit amet,
-													consectetur adipiscing elit.</a></td>
+											<td><a th:text="${notificacion.nombreVivienda}" href="#"></a></td>
+											<td><a th:text="${notificacion.titulo}" href="#"></a></td>
 
-											<td class="text-right mail-date">Tue, Nov 25</td>
+											<td th:text="${#dates.format(notificacion.fecha, 'dd-MM-yyyy')}" class="text-right mail-date"></td>
 										</tr>
 
 									</tbody>
@@ -350,6 +345,22 @@
 				 $('.datepicker').datepicker();
 				 $('.summernote').summernote();
 				 
+				 function hide_messages() {
+						$('.form-control').removeClass("error");
+						$("label[class='error']").addClass("hidden");
+					}
+					function show_messages(response) {
+						var errores = response.errorMessages;
+						$.each(errores, function(key, value) {
+							$("#" + key).addClass("error");
+							var selector = "#" + key + "-error";
+							$(selector).text(value);
+							$(selector).removeClass("hidden");
+						});
+
+					}
+				 
+				 
 				 $('#btn-regresar').on('click', function() {
 					 $('#contenedor-notas').load("/condominio/notificaciones/refresh-listado",function(){
 						 
@@ -358,7 +369,7 @@
 				 
 				 $('#btn-registrar').on('click',function(){
 					 var data = $('#form-editor').serializeArray();
-					 var data_viviendas=$('#select-viviendas').select2("val").map(Number);
+					 var data_viviendas=$('#selectViviendas').select2("val").map(Number);
 					 data.push({ name: "viviendas", value: data_viviendas });
 					 var data_cuerpo=$('#cuerpo').summernote('code');
 					 data.push({ name: "cuerpo", value: data_cuerpo });
@@ -368,11 +379,11 @@
 							if (ret_data.estado) {
 								//ocultar errores form
 								hide_messages();
-								$("#registro-form")[0].reset();
+								$("#form-editor")[0].reset();
 								//desplegar mensaje global
 								toastr.success(ret_data.valor);
 							} else {
-								//hide_messages();
+								hide_messages();
 								show_messages(ret_data);
 								toastr.warning(ret_data.valor);
 							}
